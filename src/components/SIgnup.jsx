@@ -12,18 +12,33 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+  
+  const [Fname,setFname] = React.useState("");
+  const [Lname,setLname] = React.useState("");
+  const [email,setEmail] = React.useState("");
+  const [password,setPassword] = React.useState("");
+  const navigate = useNavigate();
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const obj = {Fname,Lname,email,password};
+    axios("https://reqres.in/api/register",{
+     method:"post",
+     data:obj
+    })
+    .then((res)=>{
+      console.log(res)
+      alert(`Welcome ${Fname} ${Lname}`)
+      navigate("/dashboard")
+    }).catch((err)=>console.log(err))
   };
 
   return (
@@ -57,6 +72,8 @@ export default function SignUp() {
                   fullWidth
                   id="firstName"
                   label="First Name"
+                  value={Fname}
+              onChange={(e)=>setFname(e.target.value)}
                   autoFocus
                 />
               </Grid>
@@ -68,6 +85,8 @@ export default function SignUp() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  value={Lname}
+              onChange={(e)=>setLname(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -78,6 +97,8 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  value={email}
+              onChange={(e)=>setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -89,6 +110,8 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  value={password}
+              onChange={(e)=>setPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>

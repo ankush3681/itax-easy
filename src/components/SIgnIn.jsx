@@ -12,17 +12,31 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from 'react-redux';
+import { login } from '../Redux/Auth Redux/action';
+import { useNavigate } from 'react-router-dom';
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const [email,setEmail] = React.useState("");
+  const [password,setPassword] = React.useState("");
+  const dispatch = useDispatch();
+  const navigate= useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    let obj={email,password}
+    console.log(obj);
+
+    dispatch(login(obj))
+    .then(()=>{
+      navigate("/dashboard");
+    })
+
+    setEmail("");
+    setPassword("");
   };
 
   return (
@@ -55,6 +69,8 @@ export default function SignIn() {
               label="Email Address"
               name="email"
               autoComplete="email"
+              value={email}
+              onChange={(e)=>setEmail(e.target.value)}
               autoFocus
             />
             <TextField
@@ -66,6 +82,8 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              value={password}
+              onChange={(e)=>setPassword(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
